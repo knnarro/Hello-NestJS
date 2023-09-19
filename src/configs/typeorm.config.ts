@@ -5,7 +5,7 @@ export const typeORMConfig : TypeOrmModuleOptions = {
     host: 'localhost',
     port: 5432,
     username: 'naro',
-    database: 'boadr-app',
-    entities: [__dirname + '/../**/*.entitiy.{js,ts}'],
+    database: 'board-app',
+    entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: true
 }
