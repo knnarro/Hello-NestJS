@@ -1,5 +1,5 @@
-import { genSalt, hash } from 'bcryptjs'
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { genSalt, hash, compare } from 'bcryptjs'
+import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -27,6 +27,17 @@ export class AuthService {
             else{
                 throw new InternalServerErrorException();
             }
+        }
+    }
+
+    async signIn(authCredentialDto: AuthCredentialDto): Promise<String> {
+        const {username, password} = authCredentialDto;
+        const user = await this.userRepository.findOneBy({username});
+
+        if(user && (await compare(password, user.password))){
+            return 'login success'
+        } else{
+            throw new UnauthorizedException('login failed')
         }
     }
 }
