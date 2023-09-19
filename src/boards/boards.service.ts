@@ -3,7 +3,7 @@ import { BoardStatus } from './boards.enums';
 import { randomUUID } from 'crypto';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Board } from './boards.entity';
+import { Board } from './board.entity';
 import { Repository } from 'typeorm';
 
 

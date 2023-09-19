@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BoardStatus } from './boards.enums';
 import { BoardsService } from './boards.service';
-import { Board } from './boards.entity';
+import { Board } from './board.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
-import { NotFoundError } from 'rxjs';
 
 @Controller('boards')
 export class BoardsController {
