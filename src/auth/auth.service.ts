@@ -4,12 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
+import { JwtService } from '@nestjs/jwt';
+import { AccessTokenDto } from './dto/access-token.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        private jwtService: JwtService
     ) {}
 
     async createUser(authCredentialDto: AuthCredentialDto): Promise<User>{
@@ -30,12 +33,16 @@ export class AuthService {
         }
     }
 
-    async signIn(authCredentialDto: AuthCredentialDto): Promise<String> {
+    async signIn(authCredentialDto: AuthCredentialDto): Promise<AccessTokenDto> {
         const {username, password} = authCredentialDto;
         const user = await this.userRepository.findOneBy({username});
 
         if(user && (await compare(password, user.password))){
-            return 'login success'
+            // 유저 토큰 생성
+            const payload = { username }
+            const accessToken = this.jwtService.sign(payload)
+            
+            return { accessToken }
         } else{
             throw new UnauthorizedException('login failed')
         }
