@@ -1,5 +1,5 @@
 import { genSalt, hash, compare } from 'bcryptjs'
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -14,6 +14,7 @@ export class AuthService {
         private userRepository: Repository<User>,
         private jwtService: JwtService
     ) {}
+    private logger = new Logger('AuthService')
 
     async createUser(authCredentialDto: AuthCredentialDto): Promise<User>{
         const {username, password} = authCredentialDto;
@@ -44,6 +45,7 @@ export class AuthService {
             
             return { accessToken }
         } else{
+            this.logger.warn(`${username} trying login but failed`)
             throw new UnauthorizedException('login failed')
         }
     }
